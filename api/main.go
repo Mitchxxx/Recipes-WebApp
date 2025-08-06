@@ -26,6 +26,7 @@ import (
 
 	// "github.com/gin-contrib/sessions"
 	// redisStore "github.com/gin-contrib/sessions/redis"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/joho/godotenv"
@@ -124,7 +125,7 @@ func AuthMiddleware() gin.HandlerFunc{
 
 func main () {
 	router := gin.Default()
-
+	router.Use(cors.Default())
 	router.GET("/recipes", recipesHandler.ListRecipesHandler)
 	router.POST("/signin", authHandler.SigninHandler)
 	router.POST("/refresh", authHandler.RefreshHandler)

@@ -47,7 +47,6 @@ func init (){
 
 }
 
-
 // Initialize recipes.josn from assets.go
 
 // func init() {
