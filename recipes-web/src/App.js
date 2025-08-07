@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Recipe from './Recipe';
+import Navbar from './Navbar';
 
 class App extends React.Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        {this.state.recipes.map((recipe, index) => (
+        <Navbar />
+          {this.state.recipes.map((recipe, index) => (
           <Recipe recipe={recipe} key={index} />
         ))}
       </div>
