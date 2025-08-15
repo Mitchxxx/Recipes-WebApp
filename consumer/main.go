@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"html"
 	"io"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -143,6 +145,9 @@ func main () {
 
 	forever := make(chan bool)
 	queue := setEnv("RABBITMQ_QUEUE")
+	if _, err := channelAmqp.QueueDeclare(queue, true, false, false, false, nil); err != nil {
+    	log.Fatal("amqp declare:", err)
+	}
 	msgs, err := channelAmqp.Consume(
 		queue,
 		"",
@@ -153,6 +158,7 @@ func main () {
 		nil,
 	)
 	if err != nil { log.Fatal("amqp consume:", err)}
+	log.Printf("Connected to RabbitMQ uri=%s queue=%s", os.Getenv("RABBITMQ_URI"), queue)
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
@@ -187,6 +193,10 @@ func main () {
 					"createdAt": time.Now(),
 				}
 				if _, err := collection.InsertOne(writeCtx, doc); err != nil {
+					var we mongo.WriteException
+                	if !(errors.As(err, &we) && len(we.WriteErrors) > 0 && we.WriteErrors[0].Code == 11000) {
+                    	log.Printf("insert error for %s: %v", entry.Link.Href, err)
+                	}
 					continue
 				}
 				inserted++
