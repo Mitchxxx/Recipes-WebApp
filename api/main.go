@@ -29,7 +29,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
-	"github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 	"github.com/mitchxxx/recipes-api/handlers"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -67,10 +67,10 @@ func init(){
 	}*/
 
 	// Load .env file
-  err := godotenv.Load()
-  if err != nil {
-	log.Fatal("Failed to load .env file")
-  }
+//   err := godotenv.Load()
+//   if err != nil {
+// 	log.Fatal("Failed to load .env file")
+//   }
 
   ctx = context.Background()
   mongoUri := os.Getenv("MONGO_URI")
@@ -110,7 +110,7 @@ func init(){
 		log.Fatal(err)
 	}
 	log.Println("Inserted recipes: ", len(insertManyResult.InsertedIDs))
-	*/
+	//*/
 }
 
 func AuthMiddleware() gin.HandlerFunc{
@@ -129,15 +129,19 @@ func main () {
 	router.GET("/recipes", recipesHandler.ListRecipesHandler)
 	router.POST("/signin", authHandler.SigninHandler)
 	router.POST("/refresh", authHandler.RefreshHandler)
+	router.POST("/recipes", recipesHandler.NewRecipeHandler)
+	router.GET("/recipes/:id", recipesHandler.GetOneRecipeHandler)
+	router.PUT("/recipes/:id", recipesHandler.UpdateRecipeHandler)
+	router.DELETE("/recipes/:id", recipesHandler.DeleteRecipeHandler)
 
-	authorized := router.Group("/")
-	authorized.Use(authHandler.AuthMiddleware())
-	{
-		authorized.POST("/recipes", recipesHandler.NewRecipeHandler)
-		authorized.GET("/recipes/:id", recipesHandler.GetOneRecipeHandler)
-		authorized.PUT("/recipes/:id", recipesHandler.UpdateRecipeHandler)
-		authorized.DELETE("/recipes/:id", recipesHandler.DeleteRecipeHandler)
-	}
+	// authorized := router.Group("/")
+	// authorized.Use(authHandler.AuthMiddleware())
+	// {
+	// 	authorized.POST("/recipes", recipesHandler.NewRecipeHandler)
+	// 	authorized.GET("/recipes/:id", recipesHandler.GetOneRecipeHandler)
+	// 	authorized.PUT("/recipes/:id", recipesHandler.UpdateRecipeHandler)
+	// 	authorized.DELETE("/recipes/:id", recipesHandler.DeleteRecipeHandler)
+	// }
 
 	//router.Run()
 	
