@@ -278,11 +278,6 @@ This project is part of the Building Distributed Applications in Gin learning ma
 - [Auth0 Documentation](https://auth0.com/docs)
 - [Building Distributed Applications in Gin](https://github.com/PacktPublishing/Building-Distributed-Applications-in-Gin)
 
-## 👥 Author
-
-**Mitchel Egboko**
-- Email: megboko@gmail.com
-
 ## ⚠️ Notes
 
 - The API uses CORS (Cross-Origin Resource Sharing) configured with default settings
